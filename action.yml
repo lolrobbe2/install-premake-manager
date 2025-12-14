@@ -1,6 +1,9 @@
 name: "premake-manager"
 description: "Install premake-manager in GitHub Actions"
 author: "lolrobbe2"
+branding:
+  icon: 'package'
+  color: 'blue'
 
 runs:
   using: "composite"
