@@ -1,0 +1,52 @@
+name: "premake-manager"
+description: "Install premake-manager in GitHub Actions"
+author: "lolrobbe2"
+
+runs:
+  using: "composite"
+  steps:
+    # Windows
+    - name: Install premake-manager (Windows)
+      if: runner.os == 'Windows'
+      shell: bash
+      run: |
+        set -e
+        FILE="premake-manager-cli-win.exe"
+        URL="https://github.com/lolrobbe2/premake-manager-cli/releases/latest/download/$FILE"
+        curl -L "$URL" -o "${{ github.workspace }}/premake-manager-cli.exe"
+
+        echo "${{ github.workspace }}" >> $GITHUB_PATH
+        echo "FILE=${{ github.workspace }}/premake-manager-cli.exe" >> $GITHUB_ENV
+
+    # Linux
+    - name: Install premake-manager (Linux)
+      if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        set -e
+        FILE="premake-manager-cli-linux"
+        URL="https://github.com/lolrobbe2/premake-manager-cli/releases/latest/download/$FILE"
+        curl -L "$URL" -o "${{ github.workspace }}/premake-manager-cli"
+        chmod +x "${{ github.workspace }}/premake-manager-cli"
+
+        echo "${{ github.workspace }}" >> $GITHUB_PATH
+        echo "FILE=${{ github.workspace }}/premake-manager-cli" >> $GITHUB_ENV
+
+    # macOS
+    - name: Install premake-manager (macOS)
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        set -e
+        FILE="premake-manager-cli-darwin"
+        URL="https://github.com/lolrobbe2/premake-manager-cli/releases/latest/download/$FILE"
+        curl -L "$URL" -o premake-manager-cli
+        chmod +x premake-manager-cli
+
+        # Create an .app bundle in /Applications
+        mkdir -p /Applications/premake-manager-cli.app
+        cp premake-manager-cli /Applications/premake-manager-cli.app/
+
+        # Add the .app directory to PATH
+        echo "PATH=$PATH:/Applications/premake-manager-cli.app" >> $GITHUB_ENV
+        echo "/Applications/premake-manager-cli.app" >> $GITHUB_PATH
